@@ -11,12 +11,6 @@ using namespace std;
 #define left 2
 #define right 3
 
-
-#define up 0;
-#define down 1;
-#define left 2;
-#define right 3;
-
 struct PuzzleState
 {
 	char puzzle[40];
