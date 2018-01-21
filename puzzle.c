@@ -3,6 +3,10 @@
 #include <string.h>
 #include <math.h>
 
+#define up 0
+#define down 1
+#define left 2
+#define right 3
 #include <iostream>
 using namespace std;
 
@@ -40,6 +44,41 @@ struct PuzzleState* createNode(char puzzle[],int heuristicValue,int depth)
   return temp;
 }
 
+
+/* moves[] is the array that contains the boolean values
+for possible moves that the blank can take.
+0- up 1 - down 2 - left 3 - right */
+void checkPossibleMoves(int moves[], int position)
+{
+	int row,column;
+
+	for(int i = 0 ; i < 4 ; i++)
+	{
+		moves[i] = 1;
+	}
+
+	row = position / 4;
+	column = position % 4;
+
+	if(row == 0)
+	{
+		moves[up] = 0;
+	}
+	if(row == 3)
+	{
+		moves[down] = 0;
+	}
+	if(column == 0)
+	{
+		moves[left] = 0;
+	}
+	if(column == 3)
+	{
+		moves[right] = 0;
+	}
+}
+
+
 int positionOfBlank(int **A)
 {
 	int i,j;
@@ -47,7 +86,7 @@ int positionOfBlank(int **A)
 	for(i=0;i<4;i++)
 	{
 		for(j=0;j<4;j++)
-			if(A[i][j]==0)
+			if(A[i][j] == 15)
 				return 4*i+j;
 	}
 }
@@ -254,7 +293,7 @@ void displayMatrix(int **matrix)
 int main()
 {
 	struct PuzzleState x,*temp;
-	strcpy(x.puzzle,"7,1,2,3,4,5,6,0,8,9,10,11,12,13,14,15");
+	strcpy(x.puzzle,"0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15");
 	int **matrix;
 
 	matrix = loadDataFromStringToMatrix(x);
@@ -263,8 +302,5 @@ int main()
 
 	//initializing the heap
 	Init();
-
-
-
 	return 0;
 }
