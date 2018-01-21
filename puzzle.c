@@ -126,9 +126,7 @@ struct PuzzleState* DeleteMin() {
         } else /* It fits there */
 
         {
-
             break;
-
         }
 
     }
@@ -246,15 +244,26 @@ void displayMatrix(int **matrix)
 	}
 }
 
+int checkDuplicate(struct PuzzleState *temp)
+{
+	int i,flag=0;
 
+	for(i=1;i<=heapSize;i++)
+	{
+		if(heap[i]->heuristicValue == temp->heuristicValue)
+		{
+			if(strcmp(heap[i]->puzzle,temp->puzzle) != 0)
+				flag = 1;
+		}
+	}
 
-
-
+	return flag;
+}
 
 int main()
 {
 	struct PuzzleState x,*temp;
-	strcpy(x.puzzle,"7,1,2,3,4,5,6,0,8,9,10,11,12,13,14,15");
+	strcpy(x.puzzle,"0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15");
 	int **matrix;
 
 	matrix = loadDataFromStringToMatrix(x);
