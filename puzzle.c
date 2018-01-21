@@ -6,6 +6,12 @@
 #include <iostream>
 using namespace std;
 
+#define up 0
+#define down 1
+#define left 2
+#define right 3
+
+
 #define up 0;
 #define down 1;
 #define left 2;
@@ -303,6 +309,7 @@ int checkDuplicate(struct PuzzleState *temp)
 int main()
 {
 	struct PuzzleState x,*temp;
+	int moves[4] = {0};
 	strcpy(x.puzzle,"0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15");
 	int **matrix;
 
@@ -314,7 +321,12 @@ int main()
 
 	matrix = loadDataFromStringToMatrix(x);
 
-	cout << positionOfBlank(matrix) << endl << heuristic_2(x) << endl;
+	//cout << positionOfBlank(matrix) << endl << heuristic_2(x) << endl;
+	checkPossibleMoves(moves,0);
+	cout << "up" << moves[0] << endl;
+	cout << "down" << moves[1] << endl;
+	cout << "left" << moves[2] << endl;
+	cout << "right" << moves[3] << endl;
 
 	//initializing the heap
 	Init();
