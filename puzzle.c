@@ -3,12 +3,13 @@
 #include <string.h>
 #include <math.h>
 
-#define up 0
-#define down 1
-#define left 2
-#define right 3
 #include <iostream>
 using namespace std;
+
+#define up 0;
+#define down 1;
+#define left 2;
+#define right 3;
 
 struct PuzzleState
 {
@@ -304,6 +305,12 @@ int main()
 	struct PuzzleState x,*temp;
 	strcpy(x.puzzle,"0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15");
 	int **matrix;
+
+
+
+
+
+
 
 	matrix = loadDataFromStringToMatrix(x);
 
