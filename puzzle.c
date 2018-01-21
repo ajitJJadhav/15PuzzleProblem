@@ -40,6 +40,18 @@ struct PuzzleState* createNode(char puzzle[],int heuristicValue,int depth)
   return temp;
 }
 
+int positionOfBlank(int **A)
+{
+	int i,j;
+
+	for(i=0;i<4;i++)
+	{
+		for(j=0;j<4;j++)
+			if(A[i][j]==0)
+				return 4*i+j;
+	}
+}
+
 void printNode(struct PuzzleState *temp)
 {
   printf("\n%d\n%s\n ", temp->heuristicValue, temp->puzzle);
@@ -241,10 +253,18 @@ void displayMatrix(int **matrix)
 
 int main()
 {
-	struct PuzzleState x;
-	strcpy(x.puzzle,"4,1,2,3,0,5,6,7,8,9,10,11,12,13,14,15");
+	struct PuzzleState x,*temp;
+	strcpy(x.puzzle,"7,1,2,3,4,5,6,0,8,9,10,11,12,13,14,15");
+	int **matrix;
 
-	cout << heuristic_1(x) << endl << heuristic_2(x) << endl;
+	matrix = loadDataFromStringToMatrix(x);
+
+	cout << positionOfBlank(matrix) << endl << heuristic_2(x) << endl;
+
+	//initializing the heap
+	Init();
+
+
 
 	return 0;
 }
