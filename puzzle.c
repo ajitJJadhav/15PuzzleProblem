@@ -58,7 +58,7 @@ int heuristic_1(struct PuzzleState x)
 	{
 		for(int j = 0; j < 4; j++)
 		{
-			if(matrix[i][j] != 4*i + j) 
+			if(matrix[i][j] != 4*i + j  && a != 15) 
 			{
 				count += 1 ;
 			}
@@ -86,7 +86,7 @@ int heuristic_2(struct PuzzleState x)
 		for(int j= 0; j < 4; j++)
 		{
 			a = matrix[i][j];
-			if( a != 4*i +j)
+			if( a != 4*i +j  && a != 15)
 			{
 				sum += fabs(a/4 - i) + fabs(a%4 -j); // a/4 represents current row and a%4 represents current column
 			}
