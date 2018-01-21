@@ -316,11 +316,11 @@ int main()
 	matrix = loadDataFromStringToMatrix(x);
 
 	//cout << positionOfBlank(matrix) << endl << heuristic_2(x) << endl;
-	checkPossibleMoves(moves,0);
+	/*checkPossibleMoves(moves,2);
 	cout << "up" << moves[0] << endl;
 	cout << "down" << moves[1] << endl;
 	cout << "left" << moves[2] << endl;
-	cout << "right" << moves[3] << endl;
+	cout << "right" << moves[3] << endl;*/
 
 	//initializing the heap
 	Init();
