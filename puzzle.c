@@ -300,17 +300,43 @@ int checkDuplicate(struct PuzzleState *temp)
 	return flag;
 }
 
+
 int main()
 {
-	struct PuzzleState x,*temp;
+	struct PuzzleState x,*temp,*node;
 	int moves[4] = {0};
-	strcpy(x.puzzle,"0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15");
+
 	int **matrix;
+	int position,i,heuristicValue,depth;
 
 
+	strcpy(x.puzzle,"0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15");
 
 
+	Init();
 
+	Insert(x);
+	while(heapSize>0)
+	{
+
+		temp = DeleteMin();
+		matrix = loadDataFromStringToMatrix(temp->puzzle);
+		position = positionOfBlank(matrix);
+		checkPossibleMoves(moves,position);
+
+		//evaluating all possible moves
+		for(i=0;i<4;i++)
+		{
+			if(moves[i] == 1)
+			{
+				if(checkDuplicate(temp) == 0)
+				{
+					node = createNode(puzzle,heuristicValue,temp->depth + 1)
+				}
+			}
+		}
+
+	}
 
 
 	matrix = loadDataFromStringToMatrix(x);
@@ -323,6 +349,5 @@ int main()
 	cout << "right" << moves[3] << endl;*/
 
 	//initializing the heap
-	Init();
 	return 0;
 }
