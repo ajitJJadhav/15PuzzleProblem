@@ -320,7 +320,7 @@ int main()
 	cout << "up" << moves[0] << endl;
 	cout << "down" << moves[1] << endl;
 	cout << "left" << moves[2] << endl;
-	cout << "right" << moves[3] << endl;*/
+	cout << "right" << moves[3] << endl;
 
 	//initializing the heap
 	Init();
