@@ -177,7 +177,25 @@ struct PuzzleState* DeleteMin() {
 
 }
 
+char* loadDataFromMatrixToString(int **matrix)
+{
+	char* str = (char*)malloc(40*sizeof(char));
+	char buffer[5];
+	strcpy(str,"\0");
+	for(int i =0 ; i < 4; i++)
+	{
+		for(int j =0 ;j < 4; j++)
+		{
+			itoa(matrix[i][j],buffer,10);
+			strcat(str,buffer);
+			strcat(str,",");
+		}
+	}
 
+	printf("%s\n",str );
+	return str;
+
+}
 
 int**  loadDataFromStringToMatrix(struct PuzzleState x)
 {
@@ -305,7 +323,7 @@ int main()
 {
 	struct PuzzleState x,*temp,*node;
 	int moves[4] = {0};
-
+	char *teststr;
 	int **matrix;
 	int position,i,heuristicValue,depth;
 
@@ -315,7 +333,7 @@ int main()
 
 	Init();
 
-	Insert(x);
+	Insert(&x);
 	while(heapSize>0)
 	{
 
@@ -336,17 +354,17 @@ int main()
 			}
 		}
 
-	}
+	} // UNCOMMMENT THIS AFTER CHECKING IF CONVERTING TO STRING WORKS
 
 
 	matrix = loadDataFromStringToMatrix(x);
-
+	teststr = loadDataFromMatrixToString(matrix);
 	//cout << positionOfBlank(matrix) << endl << heuristic_2(x) << endl;
 	/*checkPossibleMoves(moves,2);
 	cout << "up" << moves[0] << endl;
 	cout << "down" << moves[1] << endl;
 	cout << "left" << moves[2] << endl;
-	cout << "right" << moves[3] << endl;
+	cout << "right" << moves[3] << endl;*/
 
 	//initializing the heap
 	return 0;
