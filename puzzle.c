@@ -3,8 +3,10 @@
 #include <string.h>
 #include <math.h>
 
+/*
 #include <iostream>
 using namespace std;
+*/
 
 #define up 0
 #define down 1
@@ -163,7 +165,7 @@ int positionOfBlank(int **A)
 	for(i=0;i<4;i++)
 	{
 		for(j=0;j<4;j++)
-			if(A[i][j] == 15)
+			if(A[i][j] == 0)
 				return 4*i+j;
 	}
 }
@@ -318,7 +320,7 @@ int heuristic_1(struct PuzzleState x)
 	{
 		for(int j = 0; j < 4; j++)
 		{
-			if(matrix[i][j] != 4*i + j  && matrix[i][j] != 15)
+			if(matrix[i][j] != 4*i + j + 1  && matrix[i][j] != 0)
 			{
 				count += 1 ;
 			}
@@ -346,7 +348,7 @@ int heuristic_2(struct PuzzleState x)
 		for(int j= 0; j < 4; j++)
 		{
 			a = matrix[i][j];
-			if( a != 4*i +j  && a != 15)
+			if( a != 4*i +j + 1  && a != 0)
 			{
 				sum += fabs(a/4 - i) + fabs(a%4 -j); // a/4 represents current row and a%4 represents current column
 			}
@@ -362,9 +364,9 @@ void displayMatrix(int **matrix)
 	{
 		for (int j = 0; j < 4; ++j)
 		{
-			if(matrix[i][j] != 15)
+			if(matrix[i][j] != 0)
 			{
-				printf("%d ", matrix[i][j] + 1 );
+				printf("%d ", matrix[i][j] );
 			}
 			else
 			{
@@ -439,7 +441,7 @@ int main()
 	int position,i,heuristicValue,depth,flag=0;
 
 
-	strcpy(x.puzzle,"0,1,6,2,4,5,15,3,8,9,10,7,12,13,14,11");
+	strcpy(x.puzzle,"1,2,7,3,5,6,0,4,9,10,11,8,13,14,15,12");
 	x.depth = 0;
 	x.heuristicValue = heuristic_2(x);
 	x.parent = NULL;
