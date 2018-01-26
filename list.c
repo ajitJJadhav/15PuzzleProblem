@@ -83,6 +83,7 @@ void displayCloseList()
 	}
 }
 
+
 int main()
 {
 	struct PuzzleState *temp = (struct PuzzleState *)malloc(sizeof(struct PuzzleState));//, *testDeletion;
