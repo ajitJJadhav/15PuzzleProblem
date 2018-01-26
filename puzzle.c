@@ -11,13 +11,89 @@ using namespace std;
 #define left 2
 #define right 3
 
+
 struct PuzzleState
 {
 	char puzzle[40];
 	int depth;
 	int heuristicValue;
 	struct PuzzleState* parent;
+	struct PuzzleState* next;
 };
+
+
+struct PuzzleState *ClosedList = NULL;
+
+void addToCloseList(struct PuzzleState *temp)
+{
+	struct PuzzleState *x =  (struct PuzzleState *)malloc(sizeof(struct PuzzleState)) ;
+	strcpy(x->puzzle, temp->puzzle);
+	x->next = ClosedList ;
+	x->depth = temp->depth;
+	x->heuristicValue = temp->heuristicValue ;
+	ClosedList = x;
+}
+
+struct PuzzleState *removefromCloseList(struct PuzzleState *x)
+{
+	struct PuzzleState *current = ClosedList,*prev = ClosedList;
+	struct PuzzleState *temp;
+	if( strcmp(x->puzzle,current->puzzle) == 0 )
+	{
+		ClosedList = ClosedList->next;
+		return x;
+	}
+	current = prev->next ;
+	while(current)
+	{
+		temp = current; //->next;
+		if(strcmp(temp->puzzle,x->puzzle) == 0)  //temp == x)
+		{
+			prev->next = temp->next;
+		}
+		current = current->next;
+		prev = prev->next;
+	}
+	return x;
+}
+
+
+int checkIfNodeIsInClosedList(struct PuzzleState *x)
+{
+	struct PuzzleState *current = ClosedList,*temp = NULL;
+	int flag = 0;
+	while(current)
+	{
+		if(strcmp(current->puzzle, x->puzzle) == 0)
+		{
+			flag = 1;
+			if(current->depth > x->depth)
+			{
+				temp = removefromCloseList(current);
+				free(temp);
+				return 0;
+			}
+			else
+			{
+				return 1;
+			}
+		}
+		current = current->next;
+	}
+	return flag;
+}
+
+
+void displayCloseList()
+{
+	struct PuzzleState *current = ClosedList;
+	while(current)
+	{
+		printf("PuzzleState %s\nHeuristic %d\tDepth%d\n",current->puzzle,current->heuristicValue,current->depth );
+		current = current->next;
+	}
+}
+
 
 struct PuzzleState* heap[1000000];
 int heapSize;
@@ -186,13 +262,13 @@ char* loadDataFromMatrixToString(int **matrix)
 	{
 		for(int j =0 ;j < 4; j++)
 		{
-			itoa(matrix[i][j],buffer,10);
+			sprintf(buffer,"%d",matrix[i][j]);//itoa(matrix[i][j],buffer,10);
 			strcat(str,buffer);
 			strcat(str,",");
 		}
 	}
 
-	printf("%s\n",str );
+	// printf("%s\n",str );
 	return str;
 
 }
@@ -297,6 +373,7 @@ void displayMatrix(int **matrix)
 		}
 		printf("\n");
 	}
+	printf("\n\n");
 }
 
 int checkDuplicate(struct PuzzleState *temp)
@@ -319,19 +396,52 @@ int checkDuplicate(struct PuzzleState *temp)
 	return flag;
 }
 
+char* getPuzzle(int **matrix,int i,int position)
+{
+	int x1,y1,x2,y2;
+	int temp;
+	char *x;
+
+	x1 = position/4;
+	y1 = position%4;
+
+	x2 = x1;
+	y2 = y1;
+
+	if(i == 0)
+		x2 = x1-1;
+	else if(i == 1)
+		x2 = x1+1;
+	else if(i == 2)
+		y2 = y1-1;
+	else
+		y2 = y1+1;
+
+	temp = matrix[x1][y1];
+	matrix[x1][y1] = matrix[x2][y2];
+	matrix[x2][y2] = temp;
+
+	x = loadDataFromMatrixToString(matrix);
+
+	temp = matrix[x1][y1];
+	matrix[x1][y1] = matrix[x2][y2];
+	matrix[x2][y2] = temp;
+
+	return x;
+}
 
 int main()
 {
 	struct PuzzleState x,*temp,*node;
 	int moves[4] = {0};
-	char *teststr;
+	char *teststr, *puzzle;
 	int **matrix;
 	int position,i,heuristicValue,depth,flag=0;
 
 
-	strcpy(x.puzzle,"0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15");
+	strcpy(x.puzzle,"0,1,6,2,4,5,15,3,8,9,10,7,12,13,14,11");
 	x.depth = 0;
-	x.heuristicValue = heuristic_2(x.puzzle);
+	x.heuristicValue = heuristic_2(x);
 	x.parent = NULL;
 
 	Init();
@@ -340,12 +450,13 @@ int main()
 	while(heapSize>0)
 	{
 		temp = DeleteMin();
+		matrix = loadDataFromStringToMatrix(*temp);
+		displayMatrix(matrix);
 		//check goal PuzzleState
 		if(temp->heuristicValue == 0)
 			break;
 
 
-		matrix = loadDataFromStringToMatrix(temp->puzzle);
 		position = positionOfBlank(matrix);
 		checkPossibleMoves(moves,position);
 
@@ -354,19 +465,15 @@ int main()
 		{
 			if(moves[i] == 1)
 			{
-//				puzzle = getPuzzle(matrix,i);
-				heuristicValue = heuristic_2(puzzle);
-				node = createNode(puzzle,heuristicValue,temp->depth + 1);
+				puzzle = getPuzzle(matrix,i,position);
+				node = createNode(puzzle,-1,temp->depth + 1);
+				heuristicValue = heuristic_2(*node);
 				node->parent = temp;
 				if(checkDuplicate(node) == 0)
 				{
-					if()//check if node in closed list ---> if there in closed list and depth less than that of closed list then delete from closedlist and add to open list or else leave as it is
+					if( checkIfNodeIsInClosedList(node) == 0 )//check if node in closed list ---> if there in closed list and depth less than that of closed list then delete from closedlist and add to open list or else leave as it is
 					{
-							//delete from closed list
 							Insert(node);
-
-							else if() //if not there in closed list
-								Insert(node);
 					}
 
 					else
@@ -376,6 +483,8 @@ int main()
 				}
 			}
 		}
+
+		addToCloseList(temp);
 
 	} // UNCOMMMENT THIS AFTER CHECKING IF CONVERTING TO STRING WORKS
 
