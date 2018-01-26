@@ -280,9 +280,6 @@ int heuristic_2(struct PuzzleState x)
 	return sum;
 }
 
-
-
-
 void displayMatrix(int **matrix)
 {
 	for (int i = 0; i < 4; ++i)
@@ -311,7 +308,11 @@ int checkDuplicate(struct PuzzleState *temp)
 		if(heap[i]->heuristicValue == temp->heuristicValue)
 		{
 			if(strcmp(heap[i]->puzzle,temp->puzzle) != 0)
+			{
+				if(temp->depth < heap[i]->depth)
+					heap[i]->depth = temp->depth;
 				flag = 1;
+			}
 		}
 	}
 
@@ -325,19 +326,25 @@ int main()
 	int moves[4] = {0};
 	char *teststr;
 	int **matrix;
-	int position,i,heuristicValue,depth;
+	int position,i,heuristicValue,depth,flag=0;
 
 
 	strcpy(x.puzzle,"0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15");
-
+	x.depth = 0;
+	x.heuristicValue = heuristic_2(x.puzzle);
+	x.parent = NULL;
 
 	Init();
 
 	Insert(&x);
 	while(heapSize>0)
 	{
-
 		temp = DeleteMin();
+		//check goal PuzzleState
+		if(temp->heuristicValue == 0)
+			break;
+
+
 		matrix = loadDataFromStringToMatrix(temp->puzzle);
 		position = positionOfBlank(matrix);
 		checkPossibleMoves(moves,position);
@@ -347,25 +354,46 @@ int main()
 		{
 			if(moves[i] == 1)
 			{
-				if(checkDuplicate(temp) == 0)
+//				puzzle = getPuzzle(matrix,i);
+				heuristicValue = heuristic_2(puzzle);
+				node = createNode(puzzle,heuristicValue,temp->depth + 1);
+				node->parent = temp;
+				if(checkDuplicate(node) == 0)
 				{
-					node = createNode(puzzle,heuristicValue,temp->depth + 1)
+					if()//check if node in closed list ---> if there in closed list and depth less than that of closed list then delete from closedlist and add to open list or else leave as it is
+					{
+							//delete from closed list
+							Insert(node);
+
+							else if() //if not there in closed list
+								Insert(node);
+					}
+
+					else
+					{
+						//do nothing if it is there in closed and depth is greater than closed list node
+					}
 				}
 			}
 		}
 
 	} // UNCOMMMENT THIS AFTER CHECKING IF CONVERTING TO STRING WORKS
 
+	if(temp->heuristicValue == 0)
+		printf("%d\n",temp->depth);
+	else
+		printf("No solution exists!!\n");
 
-	matrix = loadDataFromStringToMatrix(x);
-	teststr = loadDataFromMatrixToString(matrix);
-	//cout << positionOfBlank(matrix) << endl << heuristic_2(x) << endl;
-	/*checkPossibleMoves(moves,2);
-	cout << "up" << moves[0] << endl;
-	cout << "down" << moves[1] << endl;
-	cout << "left" << moves[2] << endl;
-	cout << "right" << moves[3] << endl;*/
 
-	//initializing the heap
+	// matrix = loadDataFromStringToMatrix(x);
+	// teststr = loadDataFromMatrixToString(matrix);
+	// //cout << positionOfBlank(matrix) << endl << heuristic_2(x) << endl;
+	// /*checkPossibleMoves(moves,2);
+	// cout << "up" << moves[0] << endl;
+	// cout << "down" << moves[1] << endl;
+	// cout << "left" << moves[2] << endl;
+	// cout << "right" << moves[3] << endl;*/
+  //
+	// //initializing the heap
 	return 0;
 }
