@@ -444,8 +444,8 @@ int main()
 	int **matrix;
 	int position,i,heuristicValue,depth,flag=0;
 
-
-	strcpy(x.puzzle,"1,2,7,3,5,6,0,4,9,10,11,8,13,14,15,12");
+	int count = 0;
+	strcpy(x.puzzle,"5,1,7,3,9,2,11,4,13,6,15,8,0,10,14,12");
 	x.depth = 0;
 	x.heuristicValue = heuristic_2(x);
 	x.parent = NULL;
@@ -482,6 +482,7 @@ int main()
 					if( checkIfNodeIsInClosedList(node) == 0 )//check if node in closed list ---> if there in closed list and depth less than that of closed list then delete from closedlist and add to open list or else leave as it is
 					{
 							Insert(node);
+							count++;
 					}
 
 					else
@@ -511,10 +512,11 @@ int main()
 	cout << "right" << moves[3] << endl;*/
 
 	//initializing the heap
-	strcpy(x.puzzle,"1,2,3,4,5,6,7,8,9,10,11,12,13,0,14,15");
+	/*strcpy(x.puzzle,"1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,0"); //1,2,3,4,5,6,7,8,9,10,11,12,13,0,14,15
 	matrix = loadDataFromStringToMatrix(x);
 	displayMatrix(matrix);
-	printf("%d\n",heuristic_2(x));
+	printf("%d\n",heuristic_2(x));*/
+	printf("\nCount:%d",count);
 
 	return 0;
 }
