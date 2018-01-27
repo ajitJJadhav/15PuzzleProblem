@@ -19,6 +19,7 @@ struct PuzzleState
 	char puzzle[40];
 	int depth;
 	int heuristicValue;
+	int f;
 	struct PuzzleState* parent;
 	struct PuzzleState* next;
 };
@@ -32,6 +33,7 @@ void addToCloseList(struct PuzzleState *temp)
 	strcpy(x->puzzle, temp->puzzle);
 	x->next = ClosedList ;
 	x->depth = temp->depth;
+	x->f = temp->f;
 	x->heuristicValue = temp->heuristicValue ;
 	ClosedList = x;
 }
@@ -105,7 +107,7 @@ int heapSize;
 void Init() {
     heapSize = 0;
     heap[0] = (struct PuzzleState*)malloc(sizeof(struct PuzzleState));
-    heap[0]->heuristicValue = heap[0]->depth = 0;
+    heap[0]->heuristicValue = heap[0]->depth = heap[0]->f = 0;
 }
 
 
@@ -119,7 +121,6 @@ struct PuzzleState* createNode(char puzzle[],int heuristicValue,int depth)
   temp->heuristicValue = heuristicValue;
   temp->depth = depth;
   temp->parent = NULL;
-
   return temp;
 }
 
@@ -182,7 +183,7 @@ void heapify(int position)
 	struct PuzzleState *element;
 	element = heap[position];
 
-  while ( heap[now / 2]->heuristicValue + heap[now / 2]->depth > element->heuristicValue + element->depth ) {
+  while ( heap[now / 2]->f  > element->f ) {
 
       heap[now] = heap[now / 2];
 
@@ -202,7 +203,7 @@ void Insert(struct PuzzleState *element) {
 	/*Adjust its position*/
   int now = heapSize;
 
-  while ( heap[now / 2]->heuristicValue + heap[now / 2]->depth > element->heuristicValue + element->depth ) {
+  while ( heap[now / 2]->f > element->f ) {
 
       heap[now] = heap[now / 2];
 
@@ -245,7 +246,7 @@ struct PuzzleState* DeleteMin() {
 
          child */
 
-        if (child != heapSize && heap[child + 1]->heuristicValue + heap[child + 1]->depth < heap[child]->heuristicValue + heap[child]->depth) {
+        if (child != heapSize && heap[child + 1]->f < heap[child]->f) {
 
             child++;
 
@@ -255,7 +256,7 @@ struct PuzzleState* DeleteMin() {
 
          is less than the minimum element among both the children*/
 
-        if (lastElement->heuristicValue + lastElement->depth > heap[child]->heuristicValue + heap[child]->depth ) {
+        if (lastElement->f > heap[child]->f ) {
 
             heap[now] = heap[child];
 
@@ -413,6 +414,7 @@ int checkDuplicate(struct PuzzleState *temp)
 				if(temp->depth < heap[i]->depth)
 				{
 					heap[i]->depth = temp->depth;
+					heap[i]->f = temp->f;
 					heapify(i);
 				}
 
@@ -465,7 +467,7 @@ void printPath(struct PuzzleState *temp)
 	while(temp->parent != NULL)
 	{
 		matrix = loadDataFromStringToMatrix(*temp);
-		printf("%d,%d,%d\n",temp->heuristicValue,temp->depth,temp->depth + temp->heuristicValue);
+		printf("%d,%d,%d\n",temp->heuristicValue,temp->depth,temp->f);
 		displayMatrix(matrix);
 		printf("\n\n");
 		temp = temp->parent;
@@ -520,11 +522,11 @@ int isSolvable(struct PuzzleState *x)
 
 void findMin()
 {
-	int min = heap[1]->heuristicValue + heap[1]->depth;
+	int min = heap[1]->f;
 	for(int i=1;i<heapSize;i++)
 	{
 		if(heap[i]->heuristicValue < min)
-			min = heap[i]->heuristicValue + heap[i]->depth;
+			min = heap[i]->f;
 	}
 
 	printf("Min : %d\n",min );
@@ -539,10 +541,11 @@ int main()
 	int position,i,heuristicValue,depth,flag=0;
 
 
-	strcpy(x.puzzle,"1,2,3,4,5,6,7,8,13,10,11,12,9,15,14,0");
+	strcpy(x.puzzle,"6,2,8,4,12,14,1,10,13,15,3,9,11,0,5,7");
 
 	x.depth = 0;
 	x.heuristicValue = heuristic_2(x);
+	x.f = x.depth*0.3 + x.heuristicValue;
 	x.parent = NULL;
 
 
@@ -556,9 +559,6 @@ int main()
 			temp = DeleteMin();
 			matrix = loadDataFromStringToMatrix(*temp);
 
-			printf("%d,%d,%d\n",temp->heuristicValue,temp->depth,temp->depth + temp->heuristicValue);
-			displayMatrix(matrix);
-			printf("Heuristic Value: %d\n\n", heuristic_2(*temp)) ;
 			//check goal PuzzleState
 			if(temp->heuristicValue == 0)
 				break;
@@ -574,6 +574,7 @@ int main()
 					puzzle = getPuzzle(matrix,i,position);
 					node = createNode(puzzle,-1,temp->depth + 1);
 					node->heuristicValue = heuristic_2(*node);
+					node->f = node->heuristicValue + node->depth*0.3;
 					node->parent = temp;
 					if(checkDuplicate(node) == 0)
 					{
