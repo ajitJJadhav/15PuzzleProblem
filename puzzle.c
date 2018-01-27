@@ -264,7 +264,7 @@ char* loadDataFromMatrixToString(int **matrix)
 	{
 		for(int j =0 ;j < 4; j++)
 		{
-			sprintf(buffer,"%d",matrix[i][j]);//itoa(matrix[i][j],buffer,10);
+			sprintf(buffer,"%d",matrix[i][j]); //itoa(matrix[i][j],buffer,10);
 			strcat(str,buffer);
 			strcat(str,",");
 		}
@@ -379,7 +379,7 @@ void displayMatrix(int **matrix)
 		}
 		printf("\n");
 	}
-	printf("\n\n");
+	//printf("\n\n");
 }
 
 int checkDuplicate(struct PuzzleState *temp)
@@ -438,9 +438,9 @@ char* getPuzzle(int **matrix,int i,int position)
 
 int main()
 {
-	struct PuzzleState x,*temp,*node;
+	struct PuzzleState x,*temp,*node,*leftChildNode,*rightChildNode,*upChildNode,*downChildNode;
 	int moves[4] = {0};
-	char *teststr, *puzzle;
+	char *puzzle,*teststr;
 	int **matrix;
 	int position,i,heuristicValue,depth,flag=0;
 
@@ -460,6 +460,7 @@ int main()
 
 		printf("%d,%d,%d\n",temp->heuristicValue,temp->depth,temp->depth + temp->heuristicValue);
 		displayMatrix(matrix);
+		printf("Heuristic Value: %d\n\n", heuristic_2(*temp)) ;
 		//check goal PuzzleState
 		if(temp->heuristicValue == 0)
 			break;
@@ -467,7 +468,6 @@ int main()
 
 		position = positionOfBlank(matrix);
 		checkPossibleMoves(moves,position);
-
 		//evaluating all possible moves
 		for(i=0;i<4;i++)
 		{
@@ -494,8 +494,7 @@ int main()
 
 		addToCloseList(temp);
 
-	} // UNCOMMMENT THIS AFTER CHECKING IF CONVERTING TO STRING WORKS
-
+	} 
 	if(temp->heuristicValue == 0)
 		printf("%d\n",temp->depth);
 	else
