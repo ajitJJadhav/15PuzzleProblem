@@ -46,6 +46,23 @@ void printNode(struct PuzzleState *temp)
   printf("\n%d\n%s\n ", temp->heuristicValue, temp->puzzle);
 }
 
+void heapify(int position)
+{
+	int now = position;
+	struct PuzzleState *element;
+	element = heap[position];
+
+  while ( heap[now / 2]->heuristicValue + heap[now / 2]->depth > element->heuristicValue + element->depth ) {
+
+      heap[now] = heap[now / 2];
+
+      now /= 2;
+
+  }
+
+  heap[now] = element;
+}
+
 void Insert(struct PuzzleState *element) {
   heapSize++;
 
@@ -151,6 +168,9 @@ int main() {
         Insert(temp);
 
     }
+
+		//heap[4]->heuristicValue = 1;
+		//heapify(4);
 
     for (iter = 0; iter < number_of_elements; iter++) {
         temp = DeleteMin();
