@@ -473,6 +473,18 @@ void printPath(struct PuzzleState *temp)
 
 }
 
+void findMin()
+{
+	int min = heap[1]->heuristicValue + heap[1]->depth;
+	for(int i=1;i<heapSize;i++)
+	{
+		if(heap[i]->heuristicValue < min)
+			min = heap[i]->heuristicValue + heap[i]->depth;
+	}
+
+	printf("Min : %d\n",min );
+}
+
 int main()
 {
 	struct PuzzleState x,*temp,*node,*leftChildNode,*rightChildNode,*upChildNode,*downChildNode;
@@ -482,7 +494,7 @@ int main()
 	int position,i,heuristicValue,depth,flag=0;
 
 
-	strcpy(x.puzzle,"1,0,14,2,13,4,12,7,5,9,10,6,3,11,8,15");
+	strcpy(x.puzzle,"2,5,13,12,1,0,3,15,9,7,14,6,10,11,8,4");
 	x.depth = 0;
 	x.heuristicValue = heuristic_2(x);
 	x.parent = NULL;
@@ -492,6 +504,7 @@ int main()
 	Insert(&x);
 	while(heapSize>0)
 	{
+		findMin();
 		temp = DeleteMin();
 		matrix = loadDataFromStringToMatrix(*temp);
 
@@ -519,7 +532,6 @@ int main()
 					if( checkIfNodeIsInClosedList(node) == 0 )//check if node in closed list ---> if there in closed list and depth less than that of closed list then delete from closedlist and add to open list or else leave as it is
 					{
 							Insert(node);
-							count++;
 					}
 
 					else
