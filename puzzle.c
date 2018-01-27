@@ -440,7 +440,7 @@ int main()
 {
 	struct PuzzleState x,*temp,*node,*leftChildNode,*rightChildNode,*upChildNode,*downChildNode;
 	int moves[4] = {0};
-	char *puzzle;
+	char *puzzle,*teststr;
 	int **matrix;
 	int position,i,heuristicValue,depth,flag=0;
 
