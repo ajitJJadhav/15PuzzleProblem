@@ -175,6 +175,24 @@ void printNode(struct PuzzleState *temp)
   printf("\n%d\n%s\n ", temp->heuristicValue, temp->puzzle);
 }
 
+
+void heapify(int position)
+{
+	int now = position;
+	struct PuzzleState *element;
+	element = heap[position];
+
+  while ( heap[now / 2]->heuristicValue + heap[now / 2]->depth > element->heuristicValue + element->depth ) {
+
+      heap[now] = heap[now / 2];
+
+      now /= 2;
+
+  }
+
+  heap[now] = element;
+}
+
 /*Insert an element into the heap */
 void Insert(struct PuzzleState *element) {
   heapSize++;
@@ -393,7 +411,11 @@ int checkDuplicate(struct PuzzleState *temp)
 			if(strcmp(heap[i]->puzzle,temp->puzzle) == 0)
 			{
 				if(temp->depth < heap[i]->depth)
+				{
 					heap[i]->depth = temp->depth;
+					heapify(i);
+				}
+
 				flag = 1;
 			}
 		}
@@ -436,6 +458,21 @@ char* getPuzzle(int **matrix,int i,int position)
 	return x;
 }
 
+void printPath(struct PuzzleState *temp)
+{
+	int **matrix;
+
+	while(temp->parent != NULL)
+	{
+		matrix = loadDataFromStringToMatrix(*temp);
+		printf("%d,%d,%d\n",temp->heuristicValue,temp->depth,temp->depth + temp->heuristicValue);
+		displayMatrix(matrix);
+		printf("\n\n");
+		temp = temp->parent;
+	}
+
+}
+
 int main()
 {
 	struct PuzzleState x,*temp,*node,*leftChildNode,*rightChildNode,*upChildNode,*downChildNode;
@@ -445,7 +482,7 @@ int main()
 	int position,i,heuristicValue,depth,flag=0;
 
 
-	strcpy(x.puzzle,"1,2,7,3,5,6,0,4,9,10,11,8,13,14,15,12");
+	strcpy(x.puzzle,"1,0,14,2,13,4,12,7,5,9,10,6,3,11,8,15");
 	x.depth = 0;
 	x.heuristicValue = heuristic_2(x);
 	x.parent = NULL;
@@ -494,27 +531,17 @@ int main()
 
 		addToCloseList(temp);
 
-	} 
+	}
+
 	if(temp->heuristicValue == 0)
+	{
+
+		printPath(temp);
 		printf("%d\n",temp->depth);
+	}
+
 	else
 		printf("No solution exists!!\n");
-
-
-	matrix = loadDataFromStringToMatrix(x);
-	teststr = loadDataFromMatrixToString(matrix);
-	//cout << positionOfBlank(matrix) << endl << heuristic_2(x) << endl;
-	/*checkPossibleMoves(moves,2);
-	cout << "up" << moves[0] << endl;
-	cout << "down" << moves[1] << endl;
-	cout << "left" << moves[2] << endl;
-	cout << "right" << moves[3] << endl;*/
-
-	//initializing the heap
-	strcpy(x.puzzle,"1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,0");
-	matrix = loadDataFromStringToMatrix(x);
-	displayMatrix(matrix);
-	printf("%d\n",heuristic_2(x));
 
 	return 0;
 }
