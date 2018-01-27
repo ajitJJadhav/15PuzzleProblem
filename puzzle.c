@@ -264,7 +264,7 @@ char* loadDataFromMatrixToString(int **matrix)
 	{
 		for(int j =0 ;j < 4; j++)
 		{
-			sprintf(buffer,"%d",matrix[i][j]);//itoa(matrix[i][j],buffer,10);
+			sprintf(buffer,"%d",matrix[i][j]); //itoa(matrix[i][j],buffer,10);
 			strcat(str,buffer);
 			strcat(str,",");
 		}
@@ -375,7 +375,7 @@ void displayMatrix(int **matrix)
 		}
 		printf("\n");
 	}
-	printf("\n\n");
+	//printf("\n\n");
 }
 
 int checkDuplicate(struct PuzzleState *temp)
@@ -386,7 +386,7 @@ int checkDuplicate(struct PuzzleState *temp)
 	{
 		if(heap[i]->heuristicValue == temp->heuristicValue)
 		{
-			if(strcmp(heap[i]->puzzle,temp->puzzle) != 0)
+			if(strcmp(heap[i]->puzzle,temp->puzzle) != 0) //WHY??
 			{
 				if(temp->depth < heap[i]->depth)
 					heap[i]->depth = temp->depth;
@@ -434,9 +434,9 @@ char* getPuzzle(int **matrix,int i,int position)
 
 int main()
 {
-	struct PuzzleState x,*temp,*node;
+	struct PuzzleState x,*temp,*node,*leftChildNode,*rightChildNode,*upChildNode,*downChildNode;
 	int moves[4] = {0};
-	char *teststr, *puzzle;
+	char *puzzle;
 	int **matrix;
 	int position,i,heuristicValue,depth,flag=0;
 
@@ -454,6 +454,7 @@ int main()
 		temp = DeleteMin();
 		matrix = loadDataFromStringToMatrix(*temp);
 		displayMatrix(matrix);
+		printf("Heuristic Value: %d\n\n", heuristic_2(*temp)) ;
 		//check goal PuzzleState
 		if(temp->heuristicValue == 0)
 			break;
@@ -461,7 +462,6 @@ int main()
 
 		position = positionOfBlank(matrix);
 		checkPossibleMoves(moves,position);
-
 		//evaluating all possible moves
 		for(i=0;i<4;i++)
 		{
@@ -488,23 +488,11 @@ int main()
 
 		addToCloseList(temp);
 
-	} // UNCOMMMENT THIS AFTER CHECKING IF CONVERTING TO STRING WORKS
-
+	} 
 	if(temp->heuristicValue == 0)
 		printf("%d\n",temp->depth);
 	else
 		printf("No solution exists!!\n");
 
-
-	// matrix = loadDataFromStringToMatrix(x);
-	// teststr = loadDataFromMatrixToString(matrix);
-	// //cout << positionOfBlank(matrix) << endl << heuristic_2(x) << endl;
-	// /*checkPossibleMoves(moves,2);
-	// cout << "up" << moves[0] << endl;
-	// cout << "down" << moves[1] << endl;
-	// cout << "left" << moves[2] << endl;
-	// cout << "right" << moves[3] << endl;*/
-  //
-	// //initializing the heap
 	return 0;
 }
