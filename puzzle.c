@@ -539,24 +539,16 @@ int main()
 	int position,i,heuristicValue,depth,flag=0;
 
 
-<<<<<<< HEAD
-	strcpy(x.puzzle,"2,5,13,12,1,0,3,15,9,7,14,6,10,11,8,4");
-=======
-	strcpy(x.puzzle,"5,1,7,3,9,2,11,4,13,6,15,8,0,10,14,12");
->>>>>>> 61732671bd433d76098965beb7c8fd61552e5cc4
+	strcpy(x.puzzle,"1,2,3,4,5,6,7,8,13,10,11,12,9,15,14,0");
+
 	x.depth = 0;
 	x.heuristicValue = heuristic_2(x);
 	x.parent = NULL;
 
+
 	if(isSolvable(&x)) // check if the puzzle is solvable
 	{
-<<<<<<< HEAD
-		findMin();
-		temp = DeleteMin();
-		matrix = loadDataFromStringToMatrix(*temp);
-=======
 		Init();
->>>>>>> 61732671bd433d76098965beb7c8fd61552e5cc4
 
 		Insert(&x);
 		while(heapSize>0)
