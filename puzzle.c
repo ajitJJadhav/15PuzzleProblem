@@ -472,6 +472,51 @@ void printPath(struct PuzzleState *temp)
 	}
 
 }
+int isSolvable(struct PuzzleState *x)
+{
+	int **m, position,*arr,k=0,count= 0;
+
+
+
+	arr = (int*)malloc(sizeof(int)*16);
+	m = loadDataFromStringToMatrix(*x);
+	position = positionOfBlank(m);
+	for(int i = 0; i < 4; i++)
+	{
+		for(int j = 0; j < 4 ; j++)
+		{
+			arr[k++] = m[i][j];
+		}
+	}
+
+	for (int i = 0; i < 15; i++)
+    {
+        for (int j = i + 1; j < 16; j++)
+        {
+            if (arr[j] && arr[i] && arr[i] > arr[j])
+                count++;
+        }
+    }
+
+
+   if((count % 2 != 0) &&  (4 - (position/4)) % 2 == 0 )
+   {
+   		return 1;
+   }
+
+   else if((count % 2 == 0) && (4 - (position/4)) % 2 != 0)
+   {
+   		return 1;
+   }
+
+   else
+   {
+   		return 0;
+   }
+}
+
+
+
 
 int main()
 {
@@ -482,67 +527,73 @@ int main()
 	int position,i,heuristicValue,depth,flag=0;
 
 
-	strcpy(x.puzzle,"1,0,14,2,13,4,12,7,5,9,10,6,3,11,8,15");
+	strcpy(x.puzzle,"5,1,7,3,9,2,11,4,13,6,15,8,0,10,14,12");
 	x.depth = 0;
 	x.heuristicValue = heuristic_2(x);
 	x.parent = NULL;
 
-	Init();
-
-	Insert(&x);
-	while(heapSize>0)
+	if(isSolvable(&x)) // check if the puzzle is solvable
 	{
-		temp = DeleteMin();
-		matrix = loadDataFromStringToMatrix(*temp);
+		Init();
 
-		printf("%d,%d,%d\n",temp->heuristicValue,temp->depth,temp->depth + temp->heuristicValue);
-		displayMatrix(matrix);
-		printf("Heuristic Value: %d\n\n", heuristic_2(*temp)) ;
-		//check goal PuzzleState
-		if(temp->heuristicValue == 0)
-			break;
-
-
-		position = positionOfBlank(matrix);
-		checkPossibleMoves(moves,position);
-		//evaluating all possible moves
-		for(i=0;i<4;i++)
+		Insert(&x);
+		while(heapSize>0)
 		{
-			if(moves[i] == 1)
-			{
-				puzzle = getPuzzle(matrix,i,position);
-				node = createNode(puzzle,-1,temp->depth + 1);
-				node->heuristicValue = heuristic_2(*node);
-				node->parent = temp;
-				if(checkDuplicate(node) == 0)
-				{
-					if( checkIfNodeIsInClosedList(node) == 0 )//check if node in closed list ---> if there in closed list and depth less than that of closed list then delete from closedlist and add to open list or else leave as it is
-					{
-							Insert(node);
-							count++;
-					}
+			temp = DeleteMin();
+			matrix = loadDataFromStringToMatrix(*temp);
 
-					else
+			printf("%d,%d,%d\n",temp->heuristicValue,temp->depth,temp->depth + temp->heuristicValue);
+			displayMatrix(matrix);
+			printf("Heuristic Value: %d\n\n", heuristic_2(*temp)) ;
+			//check goal PuzzleState
+			if(temp->heuristicValue == 0)
+				break;
+
+
+			position = positionOfBlank(matrix);
+			checkPossibleMoves(moves,position);
+			//evaluating all possible moves
+			for(i=0;i<4;i++)
+			{
+				if(moves[i] == 1)
+				{
+					puzzle = getPuzzle(matrix,i,position);
+					node = createNode(puzzle,-1,temp->depth + 1);
+					node->heuristicValue = heuristic_2(*node);
+					node->parent = temp;
+					if(checkDuplicate(node) == 0)
 					{
-						//do nothing if it is there in closed and depth is greater than closed list node
+						if( checkIfNodeIsInClosedList(node) == 0 )//check if node in closed list ---> if there in closed list and depth less than that of closed list then delete from closedlist and add to open list or else leave as it is
+						{
+								Insert(node);
+						}
+
+						else
+						{
+							//do nothing if it is there in closed and depth is greater than closed list node
+						}
 					}
 				}
 			}
+
+			addToCloseList(temp);
+
 		}
 
-		addToCloseList(temp);
+		if(temp->heuristicValue == 0)
+		{
 
+			printPath(temp);
+			printf("%d\n",temp->depth);
+		}
+
+		else
+			printf("No solution exists.\n");
+	
 	}
-
-	if(temp->heuristicValue == 0)
-	{
-
-		printPath(temp);
-		printf("%d\n",temp->depth);
-	}
-
 	else
-		printf("No solution exists!!\n");
-
+	{
+		printf("Puzzle cannot be solved from the current state.\n");
+	}
 	return 0;
 }
