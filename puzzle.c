@@ -453,6 +453,8 @@ int main()
 	{
 		temp = DeleteMin();
 		matrix = loadDataFromStringToMatrix(*temp);
+
+		printf("%d,%d,%d\n",temp->heuristicValue,temp->depth,temp->depth + temp->heuristicValue);
 		displayMatrix(matrix);
 		//check goal PuzzleState
 		if(temp->heuristicValue == 0)
@@ -469,7 +471,7 @@ int main()
 			{
 				puzzle = getPuzzle(matrix,i,position);
 				node = createNode(puzzle,-1,temp->depth + 1);
-				heuristicValue = heuristic_2(*node);
+				node->heuristicValue = heuristic_2(*node);
 				node->parent = temp;
 				if(checkDuplicate(node) == 0)
 				{
@@ -506,5 +508,10 @@ int main()
 	// cout << "right" << moves[3] << endl;*/
   //
 	// //initializing the heap
+	strcpy(x.puzzle,"1,2,3,4,5,6,7,8,9,10,11,12,13,0,14,15");
+	matrix = loadDataFromStringToMatrix(x);
+	displayMatrix(matrix);
+	printf("%d\n",heuristic_2(x));
+
 	return 0;
 }
