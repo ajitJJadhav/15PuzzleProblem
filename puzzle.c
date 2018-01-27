@@ -367,10 +367,14 @@ void displayMatrix(int **matrix)
 			if(matrix[i][j] != 0)
 			{
 				printf("%d ", matrix[i][j] );
+
+				//fromatting the output properly
+				if(matrix[i][j] < 10)
+					printf(" ");
 			}
 			else
 			{
-				printf("B ");
+				printf("   ");
 			}
 		}
 		printf("\n");
@@ -386,7 +390,7 @@ int checkDuplicate(struct PuzzleState *temp)
 	{
 		if(heap[i]->heuristicValue == temp->heuristicValue)
 		{
-			if(strcmp(heap[i]->puzzle,temp->puzzle) != 0)
+			if(strcmp(heap[i]->puzzle,temp->puzzle) == 0)
 			{
 				if(temp->depth < heap[i]->depth)
 					heap[i]->depth = temp->depth;
@@ -508,7 +512,7 @@ int main()
 	// cout << "right" << moves[3] << endl;*/
   //
 	// //initializing the heap
-	strcpy(x.puzzle,"1,2,3,4,5,6,7,8,9,10,11,12,13,0,14,15");
+	strcpy(x.puzzle,"1,2,3,4,5,6,7,8,9,10,11,12,0,13,14,15");
 	matrix = loadDataFromStringToMatrix(x);
 	displayMatrix(matrix);
 	printf("%d\n",heuristic_2(x));
