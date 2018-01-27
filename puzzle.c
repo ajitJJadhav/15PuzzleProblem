@@ -512,7 +512,7 @@ int main()
 	cout << "right" << moves[3] << endl;*/
 
 	//initializing the heap
-	strcpy(x.puzzle,"1,2,3,4,5,6,7,8,9,10,11,12,13,0,14,15");
+	strcpy(x.puzzle,"1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,0");
 	matrix = loadDataFromStringToMatrix(x);
 	displayMatrix(matrix);
 	printf("%d\n",heuristic_2(x));
