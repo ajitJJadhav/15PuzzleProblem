@@ -350,7 +350,7 @@ int heuristic_2(struct PuzzleState x)
 			a = matrix[i][j];
 			if( a != 4*i +j + 1  && a != 0)
 			{
-				sum += fabs(a/4 - i) + fabs(a%4 - j); // a/4 represents current row and a%4 represents current column
+				sum += fabs((a-1)/4 - i) + fabs((a-1)%4 -j); // a/4 represents current row and a%4 represents current column
 			}
 		}
 	}
@@ -501,17 +501,17 @@ int main()
 		printf("No solution exists!!\n");
 
 
-	// matrix = loadDataFromStringToMatrix(x);
-	// teststr = loadDataFromMatrixToString(matrix);
-	// //cout << positionOfBlank(matrix) << endl << heuristic_2(x) << endl;
-	// /*checkPossibleMoves(moves,2);
-	// cout << "up" << moves[0] << endl;
-	// cout << "down" << moves[1] << endl;
-	// cout << "left" << moves[2] << endl;
-	// cout << "right" << moves[3] << endl;*/
-  //
-	// //initializing the heap
-	strcpy(x.puzzle,"0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15");
+	matrix = loadDataFromStringToMatrix(x);
+	teststr = loadDataFromMatrixToString(matrix);
+	//cout << positionOfBlank(matrix) << endl << heuristic_2(x) << endl;
+	/*checkPossibleMoves(moves,2);
+	cout << "up" << moves[0] << endl;
+	cout << "down" << moves[1] << endl;
+	cout << "left" << moves[2] << endl;
+	cout << "right" << moves[3] << endl;*/
+
+	//initializing the heap
+	strcpy(x.puzzle,"1,2,3,4,5,6,7,8,9,10,11,12,13,0,14,15");
 	matrix = loadDataFromStringToMatrix(x);
 	displayMatrix(matrix);
 	printf("%d\n",heuristic_2(x));
