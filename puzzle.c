@@ -367,10 +367,14 @@ void displayMatrix(int **matrix)
 			if(matrix[i][j] != 0)
 			{
 				printf("%d ", matrix[i][j] );
+
+				//fromatting the output properly
+				if(matrix[i][j] < 10)
+					printf(" ");
 			}
 			else
 			{
-				printf("B ");
+				printf("   ");
 			}
 		}
 		printf("\n");
@@ -386,7 +390,7 @@ int checkDuplicate(struct PuzzleState *temp)
 	{
 		if(heap[i]->heuristicValue == temp->heuristicValue)
 		{
-			if(strcmp(heap[i]->puzzle,temp->puzzle) != 0) //WHY??
+			if(strcmp(heap[i]->puzzle,temp->puzzle) == 0)
 			{
 				if(temp->depth < heap[i]->depth)
 					heap[i]->depth = temp->depth;
@@ -453,6 +457,8 @@ int main()
 	{
 		temp = DeleteMin();
 		matrix = loadDataFromStringToMatrix(*temp);
+
+		printf("%d,%d,%d\n",temp->heuristicValue,temp->depth,temp->depth + temp->heuristicValue);
 		displayMatrix(matrix);
 		printf("Heuristic Value: %d\n\n", heuristic_2(*temp)) ;
 		//check goal PuzzleState
@@ -469,7 +475,7 @@ int main()
 			{
 				puzzle = getPuzzle(matrix,i,position);
 				node = createNode(puzzle,-1,temp->depth + 1);
-				heuristicValue = heuristic_2(*node);
+				node->heuristicValue = heuristic_2(*node);
 				node->parent = temp;
 				if(checkDuplicate(node) == 0)
 				{
@@ -493,6 +499,22 @@ int main()
 		printf("%d\n",temp->depth);
 	else
 		printf("No solution exists!!\n");
+
+
+	// matrix = loadDataFromStringToMatrix(x);
+	// teststr = loadDataFromMatrixToString(matrix);
+	// //cout << positionOfBlank(matrix) << endl << heuristic_2(x) << endl;
+	// /*checkPossibleMoves(moves,2);
+	// cout << "up" << moves[0] << endl;
+	// cout << "down" << moves[1] << endl;
+	// cout << "left" << moves[2] << endl;
+	// cout << "right" << moves[3] << endl;*/
+  //
+	// //initializing the heap
+	strcpy(x.puzzle,"1,2,3,4,5,6,7,8,9,10,11,12,0,13,14,15");
+	matrix = loadDataFromStringToMatrix(x);
+	displayMatrix(matrix);
+	printf("%d\n",heuristic_2(x));
 
 	return 0;
 }
